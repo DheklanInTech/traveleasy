@@ -21,9 +21,6 @@ function ServiceCard({ service, number }: { service: Service; number: number }) 
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-        {service.badge && (
-          <span className="absolute top-4 left-4 rounded-full bg-gold px-3 py-1.5 text-caption font-medium text-navy">{service.badge}</span>
-        )}
       </div>
       <p data-reveal style={revealDelay(number - 1)} className="text-body tracking-[-0.01em] text-ink-muted">{service.description}</p>
     </Link>
