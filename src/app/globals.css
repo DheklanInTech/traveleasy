@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+/*
+ * Travel Ease design tokens (from the Travel Ease design system).
+ * Brand palette: navy, gold, sky, white, off-white. Light (white) page ground.
+ */
+@theme {
+  --color-navy: #003366;
+  --color-gold: #ffcc02;
+  --color-sky: #1e90ff;
+  --color-offwhite: #fefbf5;
+
+  --color-ink: #003366;
+  --color-ink-muted: rgb(0 51 102 / 0.72);
+  --color-hairline: rgb(0 51 102 / 0.16);
+  --color-fill-subtle: rgb(0 51 102 / 0.06);
+  --color-hairline-inverse: rgb(255 255 255 / 0.28);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.3;
+  --text-meta: 0.875rem;
+  --text-meta--line-height: 1.45;
+  --text-label: 0.9375rem;
+  --text-label--line-height: 1.3;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.3;
+  --text-lead: 1.5rem;
+  --text-lead--line-height: 1.3;
+  --text-headline: 2.5rem;
+  --text-headline--line-height: 1.08;
+  --text-numeral: 3.5rem;
+  --text-numeral--line-height: 1;
+  --text-display: 4rem;
+  --text-display--line-height: 1.02;
+
+  --spacing-header: 72px;
+  --container-page: 1440px;
+
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise-in: rise-in 1s var(--ease-reveal) both;
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      translate: 0 28px;
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--spacing-header);
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-gold);
+  }
+}
+
+/* Section headlines: 64px desktop, scaling down on small screens. */
+@utility text-section {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+/* Frosted glass, used only over photography. */
+@utility glass-light {
+  background-color: rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(255 255 255 / 0.42);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+
+@utility glass-navy {
+  background-color: rgb(0 51 102 / 0.26);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+@utility glass-header {
+  background-color: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+/*
+ * Scroll reveal. ScrollReveal arms the page with .reveal-armed and marks each
+ * [data-reveal] element with [data-revealed] as it enters the viewport.
+ * Variants: default (fade up), "fade", "zoom" (fade, image settles from 1.08).
+ * Stagger with --reveal-delay (see revealDelay in lib/reveal).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-armed [data-reveal] {
+    transition:
+      opacity 0.9s var(--ease-reveal),
+      translate 0.9s var(--ease-reveal);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-armed [data-reveal]:not([data-revealed]) {
+    opacity: 0;
+    translate: 0 32px;
+  }
+  .reveal-armed [data-reveal="fade"]:not([data-revealed]),
+  .reveal-armed [data-reveal="zoom"]:not([data-revealed]) {
+    translate: none;
+  }
+  .reveal-armed [data-reveal="zoom"] img {
+    transition: scale 1.6s var(--ease-reveal);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-armed [data-reveal="zoom"]:not([data-revealed]) img {
+    scale: 1.08;
+  }
+}
+
+/* Background drift tied to scroll position, where scroll-driven animations exist. */
+@keyframes parallax {
+  from {
+    translate: 0 -6%;
+  }
+  to {
+    translate: 0 6%;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax {
+      scale: 1.15;
+      animation: parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+}
